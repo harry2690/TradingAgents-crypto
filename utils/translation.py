@@ -8,6 +8,7 @@ from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import SystemMessage, HumanMessage
+from langchain_core.language_models.chat_models import BaseChatModel
 
 ZH_SYSTEM_PROMPT = (
     "You are a professional financial translator. "
@@ -16,7 +17,7 @@ ZH_SYSTEM_PROMPT = (
 )
 
 
-def _create_llm_client(api_config: Dict):
+def _create_llm_client(api_config: Dict) -> BaseChatModel:
     """Create an LLM client based on the provider in ``api_config``."""
     provider = (api_config.get("llm_provider") or "openai").lower()
     model = api_config.get("quick_think_llm", "gpt-4o-mini")
@@ -41,7 +42,7 @@ def _create_llm_client(api_config: Dict):
     raise ValueError(f"Unsupported LLM provider: {provider}")
 
 
-def _invoke_client(client, text: str) -> str:
+def _invoke_client(client: BaseChatModel, text: str) -> str:
     """Send translation prompt to the LLM client and return response text."""
     messages = [
         SystemMessage(content=ZH_SYSTEM_PROMPT),
