@@ -361,9 +361,9 @@ class Toolkit:
 
         return google_news_results
 
-    @staticmethod
     @tool
     def get_stock_news(
+        self,
         ticker: Annotated[str, "the company's ticker"],
         curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
         llm_provider: Annotated[
@@ -381,14 +381,14 @@ class Toolkit:
             str: A formatted string containing the latest news about the company on the given date.
         """
 
-        provider = llm_provider or Toolkit._config["llm_provider"]
+        provider = llm_provider or self.config["llm_provider"]
         news_results = interface.get_stock_news(ticker, curr_date, provider)
 
         return news_results
 
-    @staticmethod
     @tool
     def get_global_news(
+        self,
         curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
         llm_provider: Annotated[
             str,
@@ -404,14 +404,14 @@ class Toolkit:
             str: A formatted string containing the latest macroeconomic news on the given date.
         """
 
-        provider = llm_provider or Toolkit._config["llm_provider"]
+        provider = llm_provider or self.config["llm_provider"]
         news_results = interface.get_global_news(curr_date, provider)
 
         return news_results
 
-    @staticmethod
     @tool
     def get_fundamentals(
+        self,
         ticker: Annotated[str, "the company's ticker"],
         curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
         llm_provider: Annotated[
@@ -429,7 +429,7 @@ class Toolkit:
             str: A formatted string containing the latest fundamental information about the company on the given date.
         """
 
-        provider = llm_provider or Toolkit._config["llm_provider"]
+        provider = llm_provider or self.config["llm_provider"]
         fundamentals_results = interface.get_fundamentals(
             ticker, curr_date, provider
         )

@@ -70,7 +70,9 @@ def create_news_analyst(llm, toolkit):
             )
         else:
             # Use stock-specific tools (original functionality)
-            if toolkit.config["online_tools"]:
+            provider = toolkit.config.get("llm_provider", "openai").lower()
+
+            if toolkit.config["online_tools"] and provider in ["openai", "google", "gemini"]:
                 tools = [toolkit.get_global_news, toolkit.get_google_news]
             else:
                 tools = [
