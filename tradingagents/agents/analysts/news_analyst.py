@@ -71,7 +71,7 @@ def create_news_analyst(llm, toolkit):
         else:
             # Use stock-specific tools (original functionality)
             if toolkit.config["online_tools"]:
-                tools = [toolkit.get_global_news_openai, toolkit.get_google_news]
+                tools = [toolkit.get_global_news, toolkit.get_google_news]
             else:
                 tools = [
                     toolkit.get_finnhub_news,

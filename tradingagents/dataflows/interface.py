@@ -813,6 +813,73 @@ def get_fundamentals_openai(ticker, curr_date):
     return response.output[1].content[0].text
 
 
+# Google/Gemini implementations
+def _init_google_client():
+    """Initialize Google Generative AI client using current config"""
+    config = get_config()
+    import google.generativeai as genai
+
+    genai.configure(api_key=config["api_key"])
+    return genai
+
+
+def get_stock_news_google(ticker, curr_date):
+    genai = _init_google_client()
+    model = genai.GenerativeModel(get_config()["quick_think_llm"])
+    prompt = (
+        f"Can you search Social Media for {ticker} from 7 days before {curr_date} "
+        f"to {curr_date}? Make sure you only get the data posted during that period."
+    )
+    response = model.generate_content(prompt, tools=["google_search"])
+    return response.text
+
+
+def get_global_news_google(curr_date):
+    genai = _init_google_client()
+    model = genai.GenerativeModel(get_config()["quick_think_llm"])
+    prompt = (
+        f"Can you search global or macroeconomics news from 7 days before {curr_date} "
+        f"to {curr_date} that would be informative for trading purposes? "
+        f"Make sure you only get the data posted during that period."
+    )
+    response = model.generate_content(prompt, tools=["google_search"])
+    return response.text
+
+
+def get_fundamentals_google(ticker, curr_date):
+    genai = _init_google_client()
+    model = genai.GenerativeModel(get_config()["quick_think_llm"])
+    prompt = (
+        f"Can you search Fundamental for discussions on {ticker} during the month before "
+        f"{curr_date} to the month of {curr_date}. Make sure you only get the data posted "
+        f"during that period. List as a table, with PE/PS/Cash flow/etc"
+    )
+    response = model.generate_content(prompt, tools=["google_search"])
+    return response.text
+
+
+# Generic wrappers selecting implementation based on llm_provider
+def get_stock_news(ticker, curr_date, llm_provider=None):
+    provider = (llm_provider or get_config().get("llm_provider", "openai")).lower()
+    if provider in ["google", "gemini"]:
+        return get_stock_news_google(ticker, curr_date)
+    return get_stock_news_openai(ticker, curr_date)
+
+
+def get_global_news(curr_date, llm_provider=None):
+    provider = (llm_provider or get_config().get("llm_provider", "openai")).lower()
+    if provider in ["google", "gemini"]:
+        return get_global_news_google(curr_date)
+    return get_global_news_openai(curr_date)
+
+
+def get_fundamentals(ticker, curr_date, llm_provider=None):
+    provider = (llm_provider or get_config().get("llm_provider", "openai")).lower()
+    if provider in ["google", "gemini"]:
+        return get_fundamentals_google(ticker, curr_date)
+    return get_fundamentals_openai(ticker, curr_date)
+
+
 # ===== CRYPTO TRADING FUNCTIONS =====
 
 def get_crypto_market_analysis(
