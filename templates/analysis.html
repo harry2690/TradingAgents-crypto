@@ -502,6 +502,10 @@
                     <button class="btn btn-restart me-2" onclick="restartAnalysis()">
                         <i class="fas fa-redo"></i> New Analysis
                     </button>
+                    <select id="langSelector" class="me-2">
+                        <option value="en">English</option>
+                        <option value="zh">繁體中文</option>
+                    </select>
                     <div class="social-links">
                         <a href="https://x.com/0x0funky/" target="_blank" rel="noopener noreferrer" 
                            class="social-link twitter" title="Follow on Twitter">
@@ -646,6 +650,9 @@
         // Get session ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const sessionId = urlParams.get('session');
+
+        let currentLang = 'en';
+        let latestReportSections = {};
         
         if (!sessionId) {
             alert('No session ID found. Redirecting to home page.');
@@ -687,7 +694,8 @@
         socket.on('session_state', function(data) {
             updateAgentStatus(data.agent_status);
             updateMessages(data.messages);
-            updateReports(data.report_sections);
+            latestReportSections = data.report_sections || {};
+            updateReports(latestReportSections);
             updateProgress(data.progress, data.current_step);
         });
         
@@ -698,7 +706,8 @@
         socket.on('session_state', function(data) {
             updateAgentStatus(data.agent_status);
             updateMessages(data.messages);
-            updateReports(data.report_sections);
+            latestReportSections = data.report_sections || {};
+            updateReports(latestReportSections);
             updateProgress(data.progress, data.current_step);
         });
         
@@ -712,7 +721,13 @@
         });
         
         socket.on('report_update', function(data) {
+            latestReportSections[data.section] = data.content;
             updateReportSection(data.section, data.content);
+        });
+
+        document.getElementById('langSelector').addEventListener('change', function(e) {
+            currentLang = e.target.value;
+            updateReports(latestReportSections);
         });
         
         socket.on('analysis_info_update', function(data) {
@@ -808,27 +823,27 @@
         function updateReports(reportSections) {
             const container = document.getElementById('reportsContainer');
             container.innerHTML = '';
-            
+
             Object.keys(reportSections).forEach(section => {
                 if (reportSections[section]) {
                     updateReportSection(section, reportSections[section]);
                 }
             });
         }
-        
-        function updateReportSection(section, content) {
+
+        function updateReportSection(section, contentObj) {
             const container = document.getElementById('reportsContainer');
-            
+
             // Remove existing section if it exists
             const existingSection = document.querySelector(`[data-section="${section}"]`);
             if (existingSection) {
                 existingSection.remove();
             }
-            
+
             const sectionElement = document.createElement('div');
             sectionElement.setAttribute('data-section', section);
             sectionElement.className = 'report-section mb-4';
-            
+
             const sectionTitles = {
                 'market_report': 'Market Analysis',
                 'sentiment_report': 'Social Sentiment',
@@ -838,13 +853,15 @@
                 'trader_investment_plan': 'Trading Plan',
                 'final_trade_decision': 'Portfolio Management Decision'
             };
-            
+
+            const selectedContent = contentObj[currentLang] || contentObj['en'] || '';
+
             sectionElement.innerHTML = `
                 <h6 class="text-primary">${sectionTitles[section] || section}</h6>
-                <div class="report-content">${marked.parse(content)}</div>
+                <div class="report-content">${marked.parse(selectedContent)}</div>
                 <hr>
             `;
-            
+
             container.appendChild(sectionElement);
             container.scrollTop = container.scrollHeight;
         }
@@ -871,11 +888,11 @@
                 </body>
                 </html>
             `], { type: 'text/html' });
-            
+
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `tradingagents-report-${sessionId}.html`;
+            a.download = `tradingagents-report-${sessionId}-${currentLang}.html`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
