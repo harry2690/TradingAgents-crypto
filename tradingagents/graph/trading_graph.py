@@ -133,6 +133,25 @@ class TradingAgentsGraph:
 
     def _create_tool_nodes(self) -> Dict[str, ToolNode]:
         """Create tool nodes for different data sources."""
+        provider = self.config["llm_provider"].lower()
+        is_openai = provider in ["openai", "ollama", "openrouter"]
+
+        stock_news_tool = (
+            self.toolkit.get_stock_news_openai
+            if is_openai
+            else self.toolkit.get_stock_news_google
+        )
+        global_news_tool = (
+            self.toolkit.get_global_news_openai
+            if is_openai
+            else self.toolkit.get_global_news_google
+        )
+        fundamentals_tool = (
+            self.toolkit.get_fundamentals_openai
+            if is_openai
+            else self.toolkit.get_fundamentals_google
+        )
+
         return {
             "market": ToolNode(
                 [
@@ -151,7 +170,7 @@ class TradingAgentsGraph:
             "social": ToolNode(
                 [
                     # Stock tools (online)
-                    self.toolkit.get_stock_news,
+                    stock_news_tool,
                     # Stock tools (offline)
                     self.toolkit.get_reddit_stock_info,
                     # Crypto tools
@@ -161,7 +180,7 @@ class TradingAgentsGraph:
             "news": ToolNode(
                 [
                     # Stock tools (online)
-                    self.toolkit.get_global_news,
+                    global_news_tool,
                     self.toolkit.get_google_news,
                     # Stock tools (offline)
                     self.toolkit.get_finnhub_news,
@@ -173,7 +192,7 @@ class TradingAgentsGraph:
             "fundamentals": ToolNode(
                 [
                     # Stock tools (online)
-                    self.toolkit.get_fundamentals,
+                    fundamentals_tool,
                     # Stock tools (offline)
                     self.toolkit.get_finnhub_company_insider_sentiment,
                     self.toolkit.get_finnhub_company_insider_transactions,

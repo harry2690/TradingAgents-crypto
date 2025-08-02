@@ -436,6 +436,64 @@ class Toolkit:
 
         return fundamentals_results
 
+    @tool
+    def get_stock_news_openai(
+        self,
+        ticker: Annotated[str, "the company's ticker"],
+        curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
+    ) -> str:
+        """Retrieve the latest stock news using OpenAI provider."""
+
+        return interface.get_stock_news_openai(ticker, curr_date)
+
+    @tool
+    def get_stock_news_google(
+        self,
+        ticker: Annotated[str, "the company's ticker"],
+        curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
+    ) -> str:
+        """Retrieve the latest stock news using Google/Gemini provider."""
+
+        return interface.get_stock_news_google(ticker, curr_date)
+
+    @tool
+    def get_global_news_openai(
+        self,
+        curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
+    ) -> str:
+        """Retrieve macroeconomic news using OpenAI provider."""
+
+        return interface.get_global_news_openai(curr_date)
+
+    @tool
+    def get_global_news_google(
+        self,
+        curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
+    ) -> str:
+        """Retrieve macroeconomic news using Google/Gemini provider."""
+
+        return interface.get_global_news_google(curr_date)
+
+    @tool
+    def get_fundamentals_openai(
+        self,
+        ticker: Annotated[str, "the company's ticker"],
+        curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
+    ) -> str:
+        """Retrieve stock fundamentals using OpenAI provider."""
+
+        return interface.get_fundamentals_openai(ticker, curr_date)
+
+    @tool
+    def get_fundamentals_google(
+        self,
+        ticker: Annotated[str, "the company's ticker"],
+        curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
+    ) -> str:
+        """Retrieve stock fundamentals using Google/Gemini provider."""
+
+        return interface.get_fundamentals_google(ticker, curr_date)
+
     # ===== CRYPTO TRADING TOOLS =====
 
     @staticmethod
