@@ -19,4 +19,5 @@ DEFAULT_CONFIG = {
     "max_recur_limit": 100,
     # Tool settings
     "online_tools": True,
+    "finnhub_api_key": os.getenv("FINNHUB_API_KEY", ""),
 }

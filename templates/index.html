@@ -546,9 +546,11 @@
                             </select>
                             <input type="text" class="form-control" id="backend_url" name="backend_url" 
                                    placeholder="Backend URL" value="https://api.openai.com/v1" style="margin-top: 12px;">
-                            <input type="password" class="form-control" id="api_key" name="api_key" 
+                           <input type="password" class="form-control" id="api_key" name="api_key"
                                    placeholder="API Key (required)" required style="margin-top: 12px;">
-                            <div class="form-text text-warning" style="margin-top: 6px;">
+                           <input type="password" class="form-control" id="finnhub_api_key" name="finnhub_api_key"
+                                   placeholder="Finnhub API Key" style="margin-top: 12px;">
+                           <div class="form-text text-warning" style="margin-top: 6px;">
                                 <i class="fas fa-exclamation-triangle"></i>
                                 <strong>Security Notice:</strong> API key stored locally in browser.
                             </div>
@@ -631,6 +633,20 @@
                 localStorage.setItem('tradingAgentsCrypto_apiKey', apiKey);
             }
         }
+
+        function loadSavedFinnhubKey() {
+            const savedKey = localStorage.getItem('tradingAgentsCrypto_finnhubKey');
+            if (savedKey) {
+                document.getElementById('finnhub_api_key').value = savedKey;
+            }
+        }
+
+        function saveFinnhubKey() {
+            const key = document.getElementById('finnhub_api_key').value.trim();
+            if (key) {
+                localStorage.setItem('tradingAgentsCrypto_finnhubKey', key);
+            }
+        }
         
         function isValidApiKeyFormat(apiKey) {
             // Basic validation to prevent storing obviously invalid keys
@@ -661,15 +677,19 @@
             document.documentElement.setAttribute('data-theme', savedTheme);
         }
         
-        // Load saved API key on page load
+        // Load saved API keys on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadSavedApiKey();
+            loadSavedFinnhubKey();
             loadSavedTheme();
         });
-        
-        // Save API key when user types
+
+        // Save API keys when user types
         document.getElementById('api_key').addEventListener('input', function() {
             saveApiKey();
+        });
+        document.getElementById('finnhub_api_key').addEventListener('input', function() {
+            saveFinnhubKey();
         });
         
         // Set default date to today
@@ -711,6 +731,7 @@
                 llm_provider: document.getElementById('llm_provider').value,
                 backend_url: document.getElementById('backend_url').value,
                 api_key: document.getElementById('api_key').value,
+                finnhub_api_key: document.getElementById('finnhub_api_key').value,
                 shallow_thinker: document.getElementById('shallow_thinker').value,
                 deep_thinker: document.getElementById('deep_thinker').value,
                 session_id: Date.now().toString()
