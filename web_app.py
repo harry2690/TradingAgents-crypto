@@ -157,7 +157,12 @@ def health_check():
 def start_analysis():
     data = request.json
     session_id = data.get('session_id', str(int(time.time())))
-    
+
+    finnhub_api_key = data.get('finnhub_api_key', '')
+    if finnhub_api_key:
+        os.environ['FINNHUB_API_KEY'] = finnhub_api_key
+    data['finnhub_api_key'] = finnhub_api_key
+
     # Store analysis configuration
     analysis_sessions[session_id] = {
         'config': data,
@@ -195,8 +200,14 @@ def run_analysis_background(session_id: str, config: Dict):
             'shallow_thinker': config['shallow_thinker'],
             'deep_thinker': config['deep_thinker'],
             'research_depth': config['research_depth'],
-            'session_id': session_id  # Add session ID for unique memory collections
+            'session_id': session_id,  # Add session ID for unique memory collections
+            'finnhub_api_key': config.get('finnhub_api_key', '')
         })
+
+        if updated_config.get('finnhub_api_key'):
+            os.environ['FINNHUB_API_KEY'] = updated_config['finnhub_api_key']
+        else:
+            updated_config['finnhub_api_key'] = os.environ.get('FINNHUB_API_KEY', '')
         
         if not is_production():
             print(f"[DEBUG] LLM provider: {updated_config['llm_provider']}")

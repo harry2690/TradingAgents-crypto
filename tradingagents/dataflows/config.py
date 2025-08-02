@@ -12,6 +12,7 @@ def initialize_config():
     if _config is None:
         _config = default_config.DEFAULT_CONFIG.copy()
         DATA_DIR = _config["data_dir"]
+        _config.setdefault("finnhub_api_key", "")
 
 
 def set_config(config: Dict):
@@ -20,6 +21,7 @@ def set_config(config: Dict):
     if _config is None:
         _config = default_config.DEFAULT_CONFIG.copy()
     _config.update(config)
+    _config.setdefault("finnhub_api_key", "")
     DATA_DIR = _config["data_dir"]
 
 
