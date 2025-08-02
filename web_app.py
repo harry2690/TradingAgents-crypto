@@ -119,22 +119,26 @@ class WebMessageBuffer:
 
     def update_report_section(self, section_name, content):
         if section_name in self.report_sections:
-            translated = translate_to_zh(content, self.api_config)
-            self.report_sections[section_name] = {
-                "en": content,
-                "zh": translated,
-            }
+            self.report_sections[section_name] = {"en": content, "zh": None}
             socketio.emit(
                 "report_update",
                 {
                     "section": section_name,
-                    "content": {
-                        "en": content,
-                        "zh": translated,
-                    },
+                    "content": {"en": content},
                 },
                 room=self.session_id,
             )
+
+    def finalize_reports(self):
+        for section, data in self.report_sections.items():
+            if data and not data.get("zh"):
+                translated = translate_to_zh(data["en"], self.api_config)
+                data["zh"] = translated
+                socketio.emit(
+                    "report_update",
+                    {"section": section, "content": data},
+                    room=self.session_id,
+                )
 
     def update_progress(self, progress, step):
         self.progress = progress
@@ -397,6 +401,7 @@ def run_analysis_background(session_id: str, config: Dict):
                     buffer.update_agent_status("Portfolio Manager", "completed")
                     buffer.update_progress(100, "Analysis completed!")
 
+        buffer.finalize_reports()
         buffer.update_progress(100, "Analysis completed successfully!")
         analysis_sessions[session_id]["status"] = "completed"
 
