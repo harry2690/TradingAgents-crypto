@@ -363,60 +363,78 @@ class Toolkit:
 
     @staticmethod
     @tool
-    def get_stock_news_openai(
+    def get_stock_news(
         ticker: Annotated[str, "the company's ticker"],
         curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
+        llm_provider: Annotated[
+            str,
+            "LLM provider to use, e.g. 'openai' or 'google'",
+        ] = None,
     ):
         """
-        Retrieve the latest news about a given stock by using OpenAI's news API.
+        Retrieve the latest news about a given stock using the selected LLM provider.
         Args:
             ticker (str): Ticker of a company. e.g. AAPL, TSM
             curr_date (str): Current date in yyyy-mm-dd format
+            llm_provider (str): Which LLM provider to use; defaults to config
         Returns:
             str: A formatted string containing the latest news about the company on the given date.
         """
 
-        openai_news_results = interface.get_stock_news_openai(ticker, curr_date)
+        provider = llm_provider or Toolkit._config["llm_provider"]
+        news_results = interface.get_stock_news(ticker, curr_date, provider)
 
-        return openai_news_results
+        return news_results
 
     @staticmethod
     @tool
-    def get_global_news_openai(
+    def get_global_news(
         curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
+        llm_provider: Annotated[
+            str,
+            "LLM provider to use, e.g. 'openai' or 'google'",
+        ] = None,
     ):
         """
-        Retrieve the latest macroeconomics news on a given date using OpenAI's macroeconomics news API.
+        Retrieve the latest macroeconomics news on a given date using the selected LLM provider.
         Args:
             curr_date (str): Current date in yyyy-mm-dd format
+            llm_provider (str): Which LLM provider to use; defaults to config
         Returns:
             str: A formatted string containing the latest macroeconomic news on the given date.
         """
 
-        openai_news_results = interface.get_global_news_openai(curr_date)
+        provider = llm_provider or Toolkit._config["llm_provider"]
+        news_results = interface.get_global_news(curr_date, provider)
 
-        return openai_news_results
+        return news_results
 
     @staticmethod
     @tool
-    def get_fundamentals_openai(
+    def get_fundamentals(
         ticker: Annotated[str, "the company's ticker"],
         curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
+        llm_provider: Annotated[
+            str,
+            "LLM provider to use, e.g. 'openai' or 'google'",
+        ] = None,
     ):
         """
-        Retrieve the latest fundamental information about a given stock on a given date by using OpenAI's news API.
+        Retrieve the latest fundamental information about a given stock on a given date using the selected LLM provider.
         Args:
             ticker (str): Ticker of a company. e.g. AAPL, TSM
             curr_date (str): Current date in yyyy-mm-dd format
+            llm_provider (str): Which LLM provider to use; defaults to config
         Returns:
             str: A formatted string containing the latest fundamental information about the company on the given date.
         """
 
-        openai_fundamentals_results = interface.get_fundamentals_openai(
-            ticker, curr_date
+        provider = llm_provider or Toolkit._config["llm_provider"]
+        fundamentals_results = interface.get_fundamentals(
+            ticker, curr_date, provider
         )
 
-        return openai_fundamentals_results
+        return fundamentals_results
 
     # ===== CRYPTO TRADING TOOLS =====
 
