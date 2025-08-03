@@ -17,7 +17,6 @@ DEFAULT_CONFIG = {
     "embedding_backend_url": os.getenv(
         "EMBEDDING_BACKEND_URL", "https://api.openai.com/v1"
     ),
-    "embedding_api_key": os.getenv("EMBEDDING_API_KEY", ""),  # 若 provider 為 openai 且此項空白，會回退使用 api_key
     # Debate and discussion settings
     "max_debate_rounds": 1,
     "max_risk_discuss_rounds": 1,
