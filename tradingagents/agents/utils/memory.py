@@ -5,24 +5,28 @@ import logging
 
 class FinancialSituationMemory:
     def __init__(self, name, config):
+        api_key = config.get("embedding_api_key")
+        if not api_key:
+            raise RuntimeError("未設定 EMBEDDING_API_KEY，請於環境變數或設定檔提供。")
+
         provider = config["embedding_provider"]
         if provider == "openai":
             from openai import OpenAI
             self.client = OpenAI(
                 base_url=config["embedding_backend_url"],
-                api_key=config["embedding_api_key"],
+                api_key=api_key,
             )
             self.embedding = "text-embedding-3-small"
         elif provider == "anthropic":
             from anthropic import Anthropic
             self.client = Anthropic(
-                api_key=config["embedding_api_key"],
+                api_key=api_key,
                 base_url=config["embedding_backend_url"],
             )
             self.embedding = "claude-embed-1"  # 依實際可用 model 調整
         elif provider == "gemini":
             import google.generativeai as genai
-            genai.configure(api_key=config["embedding_api_key"])
+            genai.configure(api_key=api_key)
             self.client = genai  # 依該 SDK 的使用方式取得 embeddings
             self.embedding = "textembedding-gecko"  # 範例 model
         else:
