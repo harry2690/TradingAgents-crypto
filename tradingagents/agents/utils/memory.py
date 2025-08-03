@@ -1,18 +1,32 @@
 import chromadb
 from chromadb.config import Settings
-from openai import OpenAI
 
 
 class FinancialSituationMemory:
     def __init__(self, name, config):
-        if config["backend_url"] == "http://localhost:11434/v1":
-            self.embedding = "nomic-embed-text"
-        else:
+        provider = config["embedding_provider"]
+        if provider == "openai":
+            from openai import OpenAI
+            self.client = OpenAI(
+                base_url=config["embedding_backend_url"],
+                api_key=config["embedding_api_key"],
+            )
             self.embedding = "text-embedding-3-small"
-        self.client = OpenAI(
-            base_url=config["backend_url"],
-            api_key=config["api_key"]
-        )
+        elif provider == "anthropic":
+            from anthropic import Anthropic
+            self.client = Anthropic(
+                api_key=config["embedding_api_key"],
+                base_url=config["embedding_backend_url"],
+            )
+            self.embedding = "claude-embed-1"  # 依實際可用 model 調整
+        elif provider == "gemini":
+            import google.generativeai as genai
+            genai.configure(api_key=config["embedding_api_key"])
+            self.client = genai  # 依該 SDK 的使用方式取得 embeddings
+            self.embedding = "textembedding-gecko"  # 範例 model
+        else:
+            raise ValueError(f"Unsupported embedding provider: {provider}")
+        self.provider = provider
         self.chroma_client = chromadb.Client(Settings(allow_reset=True))
         
         # Make collection name unique per session to avoid conflicts
@@ -32,12 +46,25 @@ class FinancialSituationMemory:
         self.situation_collection = self.chroma_client.create_collection(name=unique_name)
 
     def get_embedding(self, text):
-        """Get OpenAI embedding for a text"""
-        
-        response = self.client.embeddings.create(
-            model=self.embedding, input=text
-        )
-        return response.data[0].embedding
+        """Get embedding for a text using the configured provider"""
+
+        if self.provider == "openai":
+            response = self.client.embeddings.create(
+                model=self.embedding, input=text
+            )
+            return response.data[0].embedding
+        elif self.provider == "anthropic":
+            response = self.client.embeddings.create(
+                model=self.embedding, input=text
+            )
+            return response.data[0].embedding
+        elif self.provider == "gemini":
+            response = self.client.embed_content(
+                model=self.embedding, content=text
+            )
+            return response["embedding"]
+        else:
+            raise ValueError(f"Unsupported embedding provider: {self.provider}")
 
     def add_situations(self, situations_and_advice):
         """Add financial situations and their corresponding advice. Parameter is a list of tuples (situation, rec)"""
@@ -63,7 +90,7 @@ class FinancialSituationMemory:
         )
 
     def get_memories(self, current_situation, n_matches=1):
-        """Find matching recommendations using OpenAI embeddings"""
+        """Find matching recommendations using embeddings"""
         query_embedding = self.get_embedding(current_situation)
 
         results = self.situation_collection.query(
