@@ -544,10 +544,12 @@
                                 <option value="anthropic">Anthropic</option>
                                 <option value="google">Google</option>
                             </select>
-                            <input type="text" class="form-control" id="backend_url" name="backend_url" 
+                           <input type="text" class="form-control" id="backend_url" name="backend_url"
                                    placeholder="Backend URL" value="https://api.openai.com/v1" style="margin-top: 12px;">
                            <input type="password" class="form-control" id="api_key" name="api_key"
                                    placeholder="API Key (required)" required style="margin-top: 12px;">
+                           <input type="password" class="form-control" id="embedding_api_key" name="embedding_api_key"
+                                   placeholder="Embedding API Key (optional)" style="margin-top: 12px;">
                            <input type="password" class="form-control" id="finnhub_api_key" name="finnhub_api_key"
                                    placeholder="Finnhub API Key" style="margin-top: 12px;">
                            <div class="form-text text-warning" style="margin-top: 6px;">
@@ -624,13 +626,27 @@
                 document.getElementById('api_key').value = savedApiKey;
             }
         }
-        
+
         function saveApiKey() {
             const apiKey = document.getElementById('api_key').value.trim();
             if (apiKey && isValidApiKeyFormat(apiKey)) {
                 // WARNING: This stores the API key in browser localStorage
                 // Only use this for development/testing purposes
                 localStorage.setItem('tradingAgentsCrypto_apiKey', apiKey);
+            }
+        }
+
+        function loadSavedEmbeddingKey() {
+            const savedKey = localStorage.getItem('tradingAgentsCrypto_embeddingKey');
+            if (savedKey && isValidApiKeyFormat(savedKey)) {
+                document.getElementById('embedding_api_key').value = savedKey;
+            }
+        }
+
+        function saveEmbeddingKey() {
+            const key = document.getElementById('embedding_api_key').value.trim();
+            if (key && isValidApiKeyFormat(key)) {
+                localStorage.setItem('tradingAgentsCrypto_embeddingKey', key);
             }
         }
 
@@ -681,6 +697,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadSavedApiKey();
             loadSavedFinnhubKey();
+            loadSavedEmbeddingKey();
             loadSavedTheme();
         });
 
@@ -690,6 +707,9 @@
         });
         document.getElementById('finnhub_api_key').addEventListener('input', function() {
             saveFinnhubKey();
+        });
+        document.getElementById('embedding_api_key').addEventListener('input', function() {
+            saveEmbeddingKey();
         });
         
         // Set default date to today
@@ -731,6 +751,7 @@
                 llm_provider: document.getElementById('llm_provider').value,
                 backend_url: document.getElementById('backend_url').value,
                 api_key: document.getElementById('api_key').value,
+                embedding_api_key: document.getElementById('embedding_api_key').value,
                 finnhub_api_key: document.getElementById('finnhub_api_key').value,
                 shallow_thinker: document.getElementById('shallow_thinker').value,
                 deep_thinker: document.getElementById('deep_thinker').value,

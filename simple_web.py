@@ -93,6 +93,11 @@ def start_analysis():
     session_id = str(uuid.uuid4())
 
     # Store analysis configuration
+    embedding_api_key = data.get("embedding_api_key", "")
+    if embedding_api_key:
+        os.environ["EMBEDDING_API_KEY"] = embedding_api_key
+    data["embedding_api_key"] = embedding_api_key
+
     analysis_sessions[session_id] = {
         "config": data,
         "buffer": SimpleMessageBuffer(session_id, data),
@@ -142,8 +147,14 @@ def run_analysis_background(session_id: str, config: Dict):
                 "shallow_thinker": config["shallow_thinker"],
                 "deep_thinker": config["deep_thinker"],
                 "research_depth": config["research_depth"],
+                "embedding_api_key": config.get("embedding_api_key", ""),
             }
         )
+
+        if updated_config.get("embedding_api_key"):
+            os.environ["EMBEDDING_API_KEY"] = updated_config["embedding_api_key"]
+        else:
+            updated_config["embedding_api_key"] = os.environ.get("EMBEDDING_API_KEY", "")
 
         # Create initial state
         init_state = graph.propagator.create_initial_state(

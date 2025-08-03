@@ -82,6 +82,11 @@ def start_analysis():
     try:
         data = request.json
         session_id = data.get('session_id', str(int(time.time())))
+
+        embedding_api_key = data.get('embedding_api_key', '')
+        if embedding_api_key:
+            os.environ['EMBEDDING_API_KEY'] = embedding_api_key
+        data['embedding_api_key'] = embedding_api_key
         
         # Create a simplified response for Vercel environment
         buffer = SimpleMessageBuffer(session_id)

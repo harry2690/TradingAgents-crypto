@@ -116,7 +116,7 @@ This fork adds comprehensive cryptocurrency trading capabilities to the original
    export EMBEDDING_PROVIDER=openai
    export EMBEDDING_BACKEND_URL=https://api.openai.com/v1
    export EMBEDDING_API_KEY=your_embedding_key  # 若留空且提供者為 openai，會自動回退使用主模型 api_key
-   # Note: LLM API keys are entered via the web interface
+   # Note: LLM and embedding API keys can be entered via the web interface
    ```
 
 5. **Run the web application**
@@ -138,6 +138,7 @@ This fork adds comprehensive cryptocurrency trading capabilities to the original
    - Set research depth level (market conditions, DeFi analysis, etc.)
    - Configure LLM provider and models
    - Enter your API key
+   - Enter an embedding API key if using a separate key for embeddings
 
 2. **Start Analysis**
    - Click "Start Analysis" to begin
