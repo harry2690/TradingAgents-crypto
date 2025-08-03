@@ -1,5 +1,6 @@
 import chromadb
 from chromadb.config import Settings
+import logging
 
 
 class FinancialSituationMemory:
@@ -47,24 +48,27 @@ class FinancialSituationMemory:
 
     def get_embedding(self, text):
         """Get embedding for a text using the configured provider"""
-
-        if self.provider == "openai":
-            response = self.client.embeddings.create(
-                model=self.embedding, input=text
-            )
-            return response.data[0].embedding
-        elif self.provider == "anthropic":
-            response = self.client.embeddings.create(
-                model=self.embedding, input=text
-            )
-            return response.data[0].embedding
-        elif self.provider == "gemini":
-            response = self.client.embed_content(
-                model=self.embedding, content=text
-            )
-            return response["embedding"]
-        else:
-            raise ValueError(f"Unsupported embedding provider: {self.provider}")
+        try:
+            if self.provider == "openai":
+                response = self.client.embeddings.create(
+                    model=self.embedding, input=text
+                )
+                return response.data[0].embedding
+            elif self.provider == "anthropic":
+                response = self.client.embeddings.create(
+                    model=self.embedding, input=text
+                )
+                return response.data[0].embedding
+            elif self.provider == "gemini":
+                response = self.client.embed_content(
+                    model=self.embedding, content=text
+                )
+                return response["embedding"]
+            else:
+                raise ValueError(f"Unsupported embedding provider: {self.provider}")
+        except Exception as e:
+            logging.error("取得 embedding 失敗，請檢查 provider 設定: %s", e)
+            raise RuntimeError(f"取得 embedding 失敗，請檢查 provider 設定: {e}")
 
     def add_situations(self, situations_and_advice):
         """Add financial situations and their corresponding advice. Parameter is a list of tuples (situation, rec)"""
