@@ -35,8 +35,8 @@ TradingAgents-main/
 PYTHONPATH=.
 FLASK_ENV=production
 EMBEDDING_PROVIDER=openai
-EMBEDDING_API_KEY=你的_api_key
 EMBEDDING_BACKEND_URL=https://api.openai.com/v1
+# 嵌入模型預設共用主 API_KEY，系統會依提供者自動辨識；如需不同金鑰可設定 EMBEDDING_API_KEY
 ```
 
 如需切換嵌入服務，可依下表設定 `EMBEDDING_PROVIDER` 與 `EMBEDDING_BACKEND_URL`：

@@ -115,7 +115,7 @@ This fork adds comprehensive cryptocurrency trading capabilities to the original
    export FINNHUB_API_KEY=your_finnhub_api_key
    export EMBEDDING_PROVIDER=openai
    export EMBEDDING_BACKEND_URL=https://api.openai.com/v1
-   export EMBEDDING_API_KEY=your_embedding_key  # 若留空且提供者為 openai，會自動回退使用主模型 api_key
+   # Embedding 預設共用主 API_KEY，系統會依提供者自動辨識；如需不同金鑰可另外設定 EMBEDDING_API_KEY
    # Note: LLM and embedding API keys can be entered via the web interface
    ```
 
@@ -138,7 +138,7 @@ This fork adds comprehensive cryptocurrency trading capabilities to the original
    - Set research depth level (market conditions, DeFi analysis, etc.)
    - Configure LLM provider and models
    - Enter your API key
-   - Enter an embedding API key if using a separate key for embeddings
+   - Embedding 預設共用主 API_KEY，若需不同金鑰可在此輸入
 
 2. **Start Analysis**
    - Click "Start Analysis" to begin
@@ -207,8 +207,8 @@ Analyst Team → Research Team → Trader → Risk Management → Portfolio Mana
 ```bash
 export FINNHUB_API_KEY=你的_finnhub_key
 export EMBEDDING_PROVIDER=openai
-export EMBEDDING_API_KEY=你的_api_key  # 若留空且提供者為 openai，會自動回退使用主模型 api_key
 # 如需自訂端點可設定 EMBEDDING_BACKEND_URL
+# Embedding 預設共用主 API_KEY，系統會依提供者自動辨識；如需不同金鑰可設定 EMBEDDING_API_KEY
 ```
 
 ### 支援的嵌入服務
@@ -219,7 +219,7 @@ export EMBEDDING_API_KEY=你的_api_key  # 若留空且提供者為 openai，會
 | Anthropic | `anthropic`         | `https://api.anthropic.com`    |
 | Google Gemini | `google`        | `https://generativelanguage.googleapis.com/v1` |
 
-選擇提供者後，將 `EMBEDDING_API_KEY` 設為對應服務的 API 金鑰，並視需要調整 `EMBEDDING_BACKEND_URL`。若提供者為 `openai` 且未設定 `EMBEDDING_API_KEY`，會自動回退使用主模型的 `api_key`。
+選擇提供者後，系統會自動辨識並共用主 API_KEY；如需使用不同金鑰，可設定 `EMBEDDING_API_KEY` 並調整 `EMBEDDING_BACKEND_URL`。
 
 ## 🔧 Configuration
 
