@@ -199,15 +199,28 @@ Analyst Team → Research Team → Trader → Risk Management → Portfolio Mana
 - 🛡️ **Risk Manager**: Risk assessment and mitigation
 - 📊 **Portfolio Manager**: Final execution decisions
 
-## 🔧 Configuration
+## 環境變數設定
 
-### Environment Variables
+系統透過環境變數控制向量嵌入服務，可使用 `export` 指令或建立 `.env` 檔案設定：
+
 ```bash
-FINNHUB_API_KEY=your_finnhub_key              # Required for financial data
-EMBEDDING_PROVIDER=openai                     # Embedding service provider (optional)
-EMBEDDING_BACKEND_URL=https://api.openai.com/v1  # Embedding API endpoint (optional)
-EMBEDDING_API_KEY=your_embedding_key          # Required if using embeddings
+export FINNHUB_API_KEY=你的_finnhub_key
+export EMBEDDING_PROVIDER=openai
+export EMBEDDING_API_KEY=你的_api_key
+# 如需自訂端點可設定 EMBEDDING_BACKEND_URL
 ```
+
+### 支援的嵌入服務
+
+| 提供者 | `EMBEDDING_PROVIDER` 值 | `EMBEDDING_BACKEND_URL` 範例 |
+|--------|------------------------|-------------------------------|
+| OpenAI | `openai`               | `https://api.openai.com/v1`    |
+| Anthropic | `anthropic`         | `https://api.anthropic.com`    |
+| Google Gemini | `google`        | `https://generativelanguage.googleapis.com/v1` |
+
+選擇提供者後，將 `EMBEDDING_API_KEY` 設為對應服務的 API 金鑰，並視需要調整 `EMBEDDING_BACKEND_URL`。
+
+## 🔧 Configuration
 
 ### LLM Configuration
 LLM API keys and model selection are configured through the web interface for security and flexibility.
