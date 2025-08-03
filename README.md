@@ -113,6 +113,9 @@ This fork adds comprehensive cryptocurrency trading capabilities to the original
 4. **Set up environment variables**
    ```bash
    export FINNHUB_API_KEY=your_finnhub_api_key
+   export EMBEDDING_PROVIDER=openai
+   export EMBEDDING_BACKEND_URL=https://api.openai.com/v1
+   export EMBEDDING_API_KEY=your_embedding_key
    # Note: LLM API keys are entered via the web interface
    ```
 
@@ -200,7 +203,10 @@ Analyst Team → Research Team → Trader → Risk Management → Portfolio Mana
 
 ### Environment Variables
 ```bash
-FINNHUB_API_KEY=your_finnhub_key      # Required for financial data
+FINNHUB_API_KEY=your_finnhub_key              # Required for financial data
+EMBEDDING_PROVIDER=openai                     # Embedding service provider (optional)
+EMBEDDING_BACKEND_URL=https://api.openai.com/v1  # Embedding API endpoint (optional)
+EMBEDDING_API_KEY=your_embedding_key          # Required if using embeddings
 ```
 
 ### LLM Configuration

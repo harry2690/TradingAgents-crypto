@@ -13,6 +13,11 @@ DEFAULT_CONFIG = {
     "deep_think_llm": "claude-3-sonnet-20240229",
     "quick_think_llm": "claude-3-haiku-20240307",
     "backend_url": "https://api.anthropic.com",
+    "embedding_provider": os.getenv("EMBEDDING_PROVIDER", "openai"),
+    "embedding_backend_url": os.getenv(
+        "EMBEDDING_BACKEND_URL", "https://api.openai.com/v1"
+    ),
+    "embedding_api_key": os.getenv("EMBEDDING_API_KEY", ""),
     # Debate and discussion settings
     "max_debate_rounds": 1,
     "max_risk_discuss_rounds": 1,
