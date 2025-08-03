@@ -29,12 +29,23 @@ TradingAgents-main/
 
 ### 2. 環境變量設置
 
-在 Vercel 項目設置中添加以下環境變量：
+在 Vercel 項目設置中添加以下環境變數：
 
 ```
 PYTHONPATH=.
 FLASK_ENV=production
+EMBEDDING_PROVIDER=openai
+EMBEDDING_API_KEY=你的_api_key
+EMBEDDING_BACKEND_URL=https://api.openai.com/v1
 ```
+
+如需切換嵌入服務，可依下表設定 `EMBEDDING_PROVIDER` 與 `EMBEDDING_BACKEND_URL`：
+
+| 提供者 | `EMBEDDING_PROVIDER` 值 | `EMBEDDING_BACKEND_URL` 範例 |
+|--------|------------------------|-------------------------------|
+| OpenAI | `openai`               | `https://api.openai.com/v1`    |
+| Anthropic | `anthropic`         | `https://api.anthropic.com`    |
+| Google Gemini | `google`        | `https://generativelanguage.googleapis.com/v1` |
 
 ## 🚀 部署步驟
 
