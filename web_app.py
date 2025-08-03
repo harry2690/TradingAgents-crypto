@@ -205,10 +205,6 @@ def start_analysis():
         os.environ["FINNHUB_API_KEY"] = finnhub_api_key
     data["finnhub_api_key"] = finnhub_api_key
 
-    embedding_api_key = data.get("embedding_api_key", "")
-    if embedding_api_key:
-        os.environ["EMBEDDING_API_KEY"] = embedding_api_key
-    data["embedding_api_key"] = embedding_api_key
 
     # Store analysis configuration
     analysis_sessions[session_id] = {
@@ -244,7 +240,6 @@ def run_analysis_background(session_id: str, config: Dict):
                 "llm_provider": config["llm_provider"],
                 "backend_url": config["backend_url"],
                 "api_key": config.get("api_key", ""),
-                "embedding_api_key": config.get("embedding_api_key", ""),
                 "shallow_thinker": config["shallow_thinker"],
                 "deep_thinker": config["deep_thinker"],
                 "research_depth": config["research_depth"],
@@ -258,10 +253,10 @@ def run_analysis_background(session_id: str, config: Dict):
         else:
             updated_config["finnhub_api_key"] = os.environ.get("FINNHUB_API_KEY", "")
 
-        if updated_config.get("embedding_api_key"):
-            os.environ["EMBEDDING_API_KEY"] = updated_config["embedding_api_key"]
+        if updated_config.get("api_key"):
+            os.environ["EMBEDDING_API_KEY"] = updated_config["api_key"]
         else:
-            updated_config["embedding_api_key"] = os.environ.get("EMBEDDING_API_KEY", "")
+            updated_config["api_key"] = os.environ.get("EMBEDDING_API_KEY", "")
 
         if not is_production():
             print(f"[DEBUG] LLM provider: {updated_config['llm_provider']}")

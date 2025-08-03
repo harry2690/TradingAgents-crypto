@@ -4,7 +4,6 @@ import json
 import time
 from pathlib import Path
 from typing import Dict, List, Optional
-import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'tradingagents_secret_key'
@@ -83,10 +82,6 @@ def start_analysis():
         data = request.json
         session_id = data.get('session_id', str(int(time.time())))
 
-        embedding_api_key = data.get('embedding_api_key', '')
-        if embedding_api_key:
-            os.environ['EMBEDDING_API_KEY'] = embedding_api_key
-        data['embedding_api_key'] = embedding_api_key
         
         # Create a simplified response for Vercel environment
         buffer = SimpleMessageBuffer(session_id)
