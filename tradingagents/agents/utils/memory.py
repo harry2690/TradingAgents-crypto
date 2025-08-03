@@ -5,11 +5,13 @@ import logging
 
 class FinancialSituationMemory:
     def __init__(self, name, config):
+        provider = config["embedding_provider"]
         api_key = config.get("embedding_api_key")
+        if not api_key and provider == "openai":
+            api_key = config.get("api_key")
         if not api_key:
             raise RuntimeError("未設定 EMBEDDING_API_KEY，請於環境變數或設定檔提供。")
 
-        provider = config["embedding_provider"]
         if provider == "openai":
             from openai import OpenAI
             self.client = OpenAI(

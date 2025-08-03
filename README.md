@@ -115,7 +115,7 @@ This fork adds comprehensive cryptocurrency trading capabilities to the original
    export FINNHUB_API_KEY=your_finnhub_api_key
    export EMBEDDING_PROVIDER=openai
    export EMBEDDING_BACKEND_URL=https://api.openai.com/v1
-   export EMBEDDING_API_KEY=your_embedding_key
+   export EMBEDDING_API_KEY=your_embedding_key  # 若留空且提供者為 openai，會自動回退使用主模型 api_key
    # Note: LLM API keys are entered via the web interface
    ```
 
@@ -206,7 +206,7 @@ Analyst Team → Research Team → Trader → Risk Management → Portfolio Mana
 ```bash
 export FINNHUB_API_KEY=你的_finnhub_key
 export EMBEDDING_PROVIDER=openai
-export EMBEDDING_API_KEY=你的_api_key
+export EMBEDDING_API_KEY=你的_api_key  # 若留空且提供者為 openai，會自動回退使用主模型 api_key
 # 如需自訂端點可設定 EMBEDDING_BACKEND_URL
 ```
 
@@ -218,7 +218,7 @@ export EMBEDDING_API_KEY=你的_api_key
 | Anthropic | `anthropic`         | `https://api.anthropic.com`    |
 | Google Gemini | `google`        | `https://generativelanguage.googleapis.com/v1` |
 
-選擇提供者後，將 `EMBEDDING_API_KEY` 設為對應服務的 API 金鑰，並視需要調整 `EMBEDDING_BACKEND_URL`。
+選擇提供者後，將 `EMBEDDING_API_KEY` 設為對應服務的 API 金鑰，並視需要調整 `EMBEDDING_BACKEND_URL`。若提供者為 `openai` 且未設定 `EMBEDDING_API_KEY`，會自動回退使用主模型的 `api_key`。
 
 ## 🔧 Configuration
 
